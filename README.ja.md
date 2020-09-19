@@ -78,6 +78,98 @@ cd Shell.JapaneseFirstNameGenerator.20200919111358/src
 ./jfn.sh
 ```
 
+* [help.txt](https://raw.githubusercontent.com/ytyaru/Shell.JapaneseFirstNameGenerator.20200919111358/master/src/doc/help.txt)
+
+## サブコマンド
+
+サブコマンド|概要
+------------|----
+generator [-n NUM] [-s SEX] [-r RATE]|ランダム生成する。（デフォルト）
+selector 値 ...|曖昧な条件指定で抽出する。
+extractor [-s SEX] [-fbperFBPER COND] ...|正確な条件指定で抽出する。
+
+　ヘルプやバージョンを表示する。
+
+```sh
+./jfn.sh -h
+./jfn.sh -v
+```
+
+### `generate`
+
+　名前をランダムに出力する。
+
+引数|初期値|概要
+----|------|----
+`-n`|`30`|出力件数
+`-s`|`*`|性別。`m`,`f`,`c`,`mc`,`fc`,`cm`,`cf`,<br>`M`(`m`+`mc`+`cm`+`c`),<br>`F`(`f`+`fc`+`cf`+`c`),<br>`C`(`c`+`cm`+`mc`+`cf`+`fc`),<br>`*`(`m`+`f`+`c`+`mc`+`fc`+`cm`+`cf`)<br>`c`は全件の性別が男女いずれかにランダムで決定する。
+`-r`|`E`|出力件数における性別ごとの比率。`-n`が`*`のときのみ有効。<br>`e`,`E`は男女比1対1にする。奇数時は`c`を1件追加。<br>`e`(`m`+`f`+`c`), `E`(`M`+`F`+`C`)
+
+```sh
+./jfn.sh
+./jfn.sh g
+./jfn.sh g -n 5
+./jfn.sh g -s m
+./jfn.sh g -r e
+./jfn.sh g -n 5 -r e
+```
+
+### `select`
+
+　名前の「読み」や「表記」から部分一致で検索する。
+
+```sh
+./jfn.sh s 'あか'
+./jfn.sh s '赤'
+./jfn.sh s 'あか' '赤'
+```
+
+### `extract`
+
+　名前の「読み」や「表記」に対して、前方一致、後方一致、部分一致、完全一致、正規表現を指定して検索する。
+
+引数|初期値|概要
+----|------|----
+`-s`|`*`|性別。`m`,`f`,`c`,`mc`,`fc`,`cm`,`cf`,<br>`M`(`m`+`mc`+`cm`+`c`),<br>`F`(`f`+`fc`+`cf`+`c`),<br>`C`(`c`+`cm`+`mc`+`cf`+`fc`),<br>`*`(`m`+`f`+`c`+`mc`+`fc`+`cm`+`cf`)
+`-f`||前方一致。
+`-b`||後方一致。
+`-p`||部分一致。
+`-e`||完全一致。
+`-r`||正規表現。
+`-F`||前方一致（否定）。
+`-B`||後方一致（否定）。
+`-P`||部分一致（否定）。
+`-E`||完全一致（否定）。
+`-R`||正規表現（否定）。
+
+```sh
+./jfn.sh -f 'たろ'
+./jfn.sh -b 'ろう'
+./jfn.sh -p 'ろ'
+./jfn.sh -e 'たろう'
+./jfn.sh -r '.*(すけ|たろう|へい|べい|ぺい|へえ|べえ|ぺえ)$'
+./jfn.sh -f '太'
+./jfn.sh -b '郎'
+./jfn.sh -p '々'
+./jfn.sh -e '太郎'
+./jfn.sh -r '^太.{1,}$'
+
+./jfn.sh -F 'たろ'
+./jfn.sh -B 'ろう'
+./jfn.sh -P 'かさ'
+./jfn.sh -E 'たろう'
+./jfn.sh -R '.*(すけ|たろう|へい|べい|ぺい|へえ|べえ|ぺえ)$'
+./jfn.sh -F '太'
+./jfn.sh -B '郎'
+./jfn.sh -P '々'
+./jfn.sh -E '太郎'
+./jfn.sh -R '^太.{1,}$'
+
+./jfn.sh -f 'たろ' -B 'ろう'
+./jfn.sh -f '太' -B '郎'
+./jfn.sh -f 'たろ' -B 'ろう' -f '太' -B '郎'
+```
+
 # 注意
 
 ## 既知のバグ

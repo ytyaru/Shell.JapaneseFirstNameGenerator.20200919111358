@@ -78,6 +78,96 @@ cd Shell.JapaneseFirstNameGenerator.20200919111358/src
 ./jfn.sh
 ```
 
+## Subcommand
+
+Subcommands|Overview
+-----------|--------
+generate [-n NUM] [-s SEX] [-r RATE]|Randomly generate. (Default)
+select value ... |Extract with ambiguous condition specification.
+extract [-s SEX] [-fbperFBPER COND] ...|Extract with accurate conditions.
+
+Display help and version.
+
+```sh
+./jfn.sh -h
+./jfn.sh -v
+```
+
+### `generate`
+
+Output the name randomly.
+
+Arguments|Default values|Overview
+---------|--------------|--------
+`-n`|`30`|Number of outputs
+`-s`|`*`|Gender. `m`,`f`,`c`,`mc`,`fc`,`cm`,`cf`, <br>`M`(`m`+`mc`+`cm`+`c` ),<br>`F`(`f`+`fc`+`cf`+`c`),<br>`C`(`c`+`cm`+`mc`+`cf`+`fc`),<br>`*`(`m`+`f`+`c`+`mc`+`fc`+`cm`+`cf`)<br>`c` is the gender of all cases Is randomly decided for either men or women.
+`-r`|`E`|Percentage of output by gender. Valid only when `-n` is` * `. <br> `e` and` E` should have a male-female ratio of 1:1. When odd, add 1 `c`. <br> `e`(`m`+`f`+`c`), `E`(`M`+`F`+`C`)
+
+```sh
+./jfn.sh
+./jfn.sh g
+./jfn.sh g -n 5
+./jfn.sh g -s m
+./jfn.sh g -r e
+./jfn.sh g -n 5 -r e
+```
+
+### `select`
+
+Search by partial match from the "reading" and "notation" of the name.
+
+```sh
+./jfn.sh s 'あか'
+./jfn.sh s '赤'
+./jfn.sh s 'あか' '赤'
+```
+
+### `extract`
+
+Search by specifying prefix match, suffix match, partial match, exact match, and regular expression for the "reading" and "notation" of the name.
+
+Arguments|Default values|Overview
+---------|--------------|--------
+`-s`|`*`|Gender。`m`,`f`,`c`,`mc`,`fc`,`cm`,`cf`,<br>`M`(`m`+`mc`+`cm`+`c`),<br>`F`(`f`+`fc`+`cf`+`c`),<br>`C`(`c`+`cm`+`mc`+`cf`+`fc`),<br>`*`(`m`+`f`+`c`+`mc`+`fc`+`cm`+`cf`)
+`-f`||Match prefix.
+`-b`||End match.
+`-p`||Partial match.
+`-e`||Exact match.
+`-r`||Regular expression.
+`-F`||Prefix match (negation).
+`-B`||End match (negative).
+`-P`||Partial match (negative).
+`-E`||Exact match (negation).
+`-R`||Regular expression (negative).
+
+```sh
+./jfn.sh -f 'たろ'
+./jfn.sh -b 'ろう'
+./jfn.sh -p 'ろ'
+./jfn.sh -e 'たろう'
+./jfn.sh -r '.*(すけ|たろう|へい|べい|ぺい|へえ|べえ|ぺえ)$'
+./jfn.sh -f '太'
+./jfn.sh -b '郎'
+./jfn.sh -p '々'
+./jfn.sh -e '太郎'
+./jfn.sh -r '^太.{1,}$'
+
+./jfn.sh -F 'たろ'
+./jfn.sh -B 'ろう'
+./jfn.sh -P 'かさ'
+./jfn.sh -E 'たろう'
+./jfn.sh -R '.*(すけ|たろう|へい|べい|ぺい|へえ|べえ|ぺえ)$'
+./jfn.sh -F '太'
+./jfn.sh -B '郎'
+./jfn.sh -P '々'
+./jfn.sh -E '太郎'
+./jfn.sh -R '^太.{1,}$'
+
+./jfn.sh -f 'たろ' -B 'ろう'
+./jfn.sh -f '太' -B '郎'
+./jfn.sh -f 'たろ' -B 'ろう' -f '太' -B '郎'
+```
+
 # Note
 
 ## Bugs
